@@ -77,7 +77,7 @@ get_container_id_by_image_name() {
 LEAVE_CONTAINER_RUNNING=0
 MODEL_NAME=""
 MODEL_NAME_FLAG=""
-NUM_WORKERS=2
+NUM_WORKERS=3
 NUM_PARAMETER_SERVERS=2
 SYNC_REPLICAS_FLAG=""
 
@@ -152,5 +152,5 @@ rm -rf "${BUILD_DIR}"
 docker run ${DOCKER_IMG_NAME} \
     /var/tf_dist_test/scripts/dist_mnist_test.sh \
     --ps_hosts "localhost:2000,localhost:2001" \
-    --worker_hosts "localhost:3000,localhost:3001" \
+    --worker_hosts "localhost:3000,localhost:3001,localhost:3002" \
     --num_gpus 0 ${SYNC_REPLICAS_FLAG}
