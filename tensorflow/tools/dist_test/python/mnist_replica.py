@@ -125,7 +125,7 @@ def main(unused_argv):
   if FLAGS.num_gpus > 0:
     if FLAGS.num_gpus < num_workers:
       raise ValueError("number of gpus is less than number of workers")
-    # Avoid gpu allocation conflict: now allocate task_num -> #gpu 
+    # Avoid gpu allocation conflict: now allocate task_num -> #gpu
     # for each worker in the corresponding machine
     gpu = (FLAGS.task_index % FLAGS.num_gpus)
     worker_device = "/job:worker/task:%d/gpu:%d" % (FLAGS.task_index, gpu)
@@ -243,6 +243,8 @@ def main(unused_argv):
                                             config=sess_config)
     else:
       sess = sv.prepare_or_wait_for_session(server.target, config=sess_config)
+
+    train_writer = tf.summary.FileWriter('/tmp/mnist_train', sess.graph)
 
     print("Worker %d: Session initialization complete." % FLAGS.task_index)
 
