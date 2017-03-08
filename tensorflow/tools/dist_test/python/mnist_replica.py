@@ -173,6 +173,11 @@ def main(unused_argv):
     correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+    # Create summaries to monitor accuracy and crossentropy
+    tf.summary.scalar("accuracy", accuracy)
+    tf.summary.scalar("crossentropy", cross_entropy)
+    # Merge all summaries into a single op
+    merged_summary_op = tf.summary.merge_all()
 
 
     opt = tf.train.AdamOptimizer(FLAGS.learning_rate)
@@ -263,7 +268,8 @@ def main(unused_argv):
       batch_xs, batch_ys = mnist.train.next_batch(FLAGS.batch_size)
       train_feed = {x: batch_xs, y_: batch_ys}
 
-      _, step = sess.run([train_step, global_step], feed_dict=train_feed)
+      _, step, summary = sess.run([train_step, global_step, merged_summary_op], feed_dict=train_feed)
+      train_writer.add_summary(summary, step)
       local_step += 1
 
       now = time.time()
